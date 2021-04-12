@@ -1,0 +1,56 @@
+<br/>
+
+<h2 class="text-center">Formulario de películas</h2>
+
+<br/>
+
+<div class="row">
+  <div class="col-xs-0 col-sm-2"></div>
+  <div class="col-xs-12 col-sm-8">
+      <div class="text-center">
+          <button type="button" id="btn_insertar"  class="btn btn-primary" [disabled]="pelicula.id" (click)="insertar()">Insertar</button>
+          <button type="button" id="btn_modificar" class="btn btn-primary" [disabled]="!pelicula.id" (click)="modificar()">Modificar</button>
+          <button type="button" id="btn_borrar"    class="btn btn-danger"  [disabled]="!pelicula.id" (click)="borrar()">Borrar</button>
+          <button type="button" id="btn_vaciar"    class="btn btn-warning" [disabled]="" (click)="vaciarFormulario()">Vaciar</button>
+          <button type="button" id="btn_cancelar"  class="btn btn-warning" [disabled]="" routerLink="/listado">Cancelar</button>
+      </div>
+      
+      <br/>
+
+      <div *ngIf="mensaje!=null" class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{mensaje}}
+      </div>
+    
+      <div id="formulario">
+          <div class="form-horizontal">
+              <div class="form-group row">
+                  <label class="col-form-label col-sm-2" for="titulo">Titulo</label>
+                  <div class="col-sm-8">
+                      <input type="text" id="titulo" class="form-control" [(ngModel)]="pelicula.titulo"/>
+                  </div>
+              </div>
+              <div class="form-group row">
+                  <label class="col-form-label col-sm-2" for="director">Director</label>
+                  <div class="col-sm-8">
+                      <input type="text" id="director" class="form-control" [(ngModel)]="pelicula.director"/>
+                  </div>
+              </div>
+              <div class="form-group row">
+                  <label class="col-form-label col-sm-2" for="genero">Genero</label>
+                  <div class="col-sm-8">
+                      <input type="text" id="genero" class="form-control" [(ngModel)]="pelicula.genero"/>
+                  </div>
+              </div>
+              <div class="form-group row">
+                  <label class="col-form-label col-sm-2" for="year">Año</label>
+                  <div class="col-sm-8">
+                      <input type="text" id="year" class="form-control" [(ngModel)]="pelicula.year"/>
+                  </div>
+              </div>
+          </div>	
+      </div>
+
+  </div>
+  <div class="col-xs-0 col-sm-2"></div>
+</div>

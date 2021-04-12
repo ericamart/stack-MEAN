@@ -1,0 +1,43 @@
+<br/>
+
+<h2 class="text-center">Listado de películas</h2>
+
+<br/>
+
+<div class="row">
+  <div class="col-xs-0 col-sm-2"></div>
+  <div class="col-xs-12 col-sm-8">
+      <div class="text-center">
+          <button type="button" id="btn_nuevo"      class="btn btn-primary" routerLink="/formulario">Nuevo</button>
+          <button type="button" id="btn_actualizar" class="btn btn-primary" (click)="getPeliculas()">Actualizar</button>
+      </div>
+
+      <br/>
+
+      <div *ngIf="mensaje!=null" class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{mensaje}}
+      </div>
+    
+      <table class="table table-hover table-striped">
+          <thead>
+              <tr>
+                  <th>Título</th>
+                  <th>Director</th>
+                  <th>Género</th>
+                  <th>Año</th>
+              </tr>
+          </thead>
+          <tbody id="tablaPeliculas">
+            <tr *ngFor="let pelicula of peliculas" [routerLink]="[ '/formulario', pelicula.id ]">
+              <td>{{pelicula.titulo}}</td>
+              <td>{{pelicula.director}}</td>
+              <td>{{pelicula.genero}}</td>
+              <td>{{pelicula.year}}</td>
+            </tr>
+          </tbody>
+      </table>
+
+  </div>
+  <div class="col-xs-0 col-sm-2"></div>
+</div>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script type="text/javascript" src="jquery.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
+                           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
+                           crossorigin="anonymous">
+    
+</head>
+
+<script type="text/javascript">
+
+let idPeliculaSel = null;
+
+function insertar() {
+    let pelicula = crearPelicula();
+    $.ajax( { url         : "/peliculas",
+              type        : 'post', 
+              contentType : 'application/json',
+              data        : JSON.stringify(pelicula) } )
+    .done(verListado)
+    .fail(procesarError);
+}
+
+function modificar() {
+    let pelicula = crearPelicula();
+    pelicula.id = idPeliculaSel;
+    $.ajax( { url         : "/peliculas/"+idPeliculaSel,
+              type        : 'put', 
+              contentType : 'application/json',
+              data        : JSON.stringify(pelicula) } )
+    .done(verListado)
+    .fail(procesarError);
+}
+
+function borrar() {
+    $.ajax( { url         : "/peliculas/"+idPeliculaSel,
+              type        : 'delete' } )
+    .done(verListado)
+    .fail(procesarError);
+    
+}
+
+function cancelar() {
+    window.location = "listadoPeliculas.html";
+}
+
+function buscarPelicula(id) {
+    $.ajax( { url : "/peliculas/"+id } )
+    .done(rellenarFormulario)
+    .fail(procesarError);
+}
+
+function crearPelicula() {
+    // selecciono los elementos dentro del div 'formulario' que tengan
+    // el atributo 'campo'
+    let pelicula = {};
+    $("#formulario [campo]").each( 
+        function() {
+            pelicula[this.id] = this.value;
+        }
+    );
+    console.log(pelicula);
+    return pelicula;
+}
+
+function rellenarFormulario(pelicula) {
+    idPeliculaSel = pelicula.id; // guardamos el id de la película para modificar / borrar
+    for (const clave in pelicula) {
+        $('#'+clave).val(pelicula[clave]);
+    }
+}
+
+function verListado(mensaje) {
+    // Para pasar el mensaje a la pantalla de listado:
+    
+    // - por parámetro:
+    //window.location = "listadoPeliculas.html?mensaje="+mensaje;
+
+    // - por cookies:
+    // se crean en el servidor, las envía al cliente, éste las puede modificar 
+    // con javascript. Esta cookie viaja en todas las peticiones del cliente al servidor, 
+    // y del servidor al cliente. 
+    // Si se ha cerado en el navegador por javascript, no viaja
+    // al servidor, y solo sirve para la parte cliente.
+    document.cookie = "mensaje=" + mensaje;
+    
+    // - por la session storage / local storage (html 5):
+    // session storage --> se elimina cuando el usuario cierra la pestaña
+    // local storage   --> se crea por cada web que se visite. Cuando se cierra el navegador 
+    //                     sigue estando.
+    sessionStorage.setItem("mensaje", mensaje);
+    
+    window.location = "listadoPeliculas.html";
+}
+
+function procesarError(error) {
+    console.error(error);
+}
+
+$(inicializar);
+
+function inicializar() {
+    let idPeliculaSel = sessionStorage.getItem("idPeliculaSel");
+    if (idPeliculaSel != null) {
+        buscarPelicula(idPeliculaSel);
+        sessionStorage.removeItem("idPeliculaSel");
+    }
+    $('#btn_insertar').click(insertar);
+    $('#btn_modificar').click(modificar);
+    $('#btn_borrar').click(borrar);
+    $('#btn_cancelar').click(cancelar);
+}
+
+</script>
+
+
+<body>
+    <div class="text-center page-header">
+        <h1>Películas 3000</h1>
+    </div>
+
+    <h2 class="text-center">Formulario de películas</h2>
+
+    <br/>
+    
+    <div class="row">
+        <div class="col-xs-0 col-sm-2"></div>
+        <div class="col-xs-12 col-sm-8">
+            <div class="text-center">
+                <button type="button" id="btn_insertar"  class="btn btn-primary">Insertar</button>
+                <button type="button" id="btn_modificar" class="btn btn-primary">Modificar</button>
+                <button type="button" id="btn_borrar"    class="btn btn-danger">Borrar</button>
+                <button type="button" id="btn_vaciar"    class="btn btn-warning">Vaciar</button>
+                <button type="button" id="btn_cancelar"  class="btn btn-warning">Cancelar</button>
+            </div>
+    
+            <br/>
+
+            <div id="formulario">
+                <div class="form-horizontal">
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2" for="titulo">Titulo</label>
+                        <div class="col-sm-8">
+                            <input type="text" id="titulo" class="form-control" campo="campo"/>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2" for="director">Director</label>
+                        <div class="col-sm-8">
+                            <input type="text" id="director" class="form-control" campo="campo"/>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2" for="genero">Genero</label>
+                        <div class="col-sm-8">
+                            <input type="text" id="genero" class="form-control" campo="campo"/>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2" for="year">Año</label>
+                        <div class="col-sm-8">
+                            <input type="text" id="year" class="form-control" campo="campo"/>
+                        </div>
+                    </div>
+                </div>	
+            </div>
+
+        </div>
+        <div class="col-xs-0 col-sm-2"></div>
+    </div>
+</body>
+</html>

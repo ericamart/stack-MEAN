@@ -1,0 +1,26 @@
+
+<p></p>
+
+<div class="text-center col-xs-12">
+  <h4>Pedidos</h4>
+</div>
+
+<hr/>
+
+<table class="table table-hover table-striped ">
+  <thead>
+    <tr>
+        <th>Código</th>
+        <th>Fecha</th>
+        <th>Total</th>
+    </tr>
+  </thead>
+  <tbody id="tablaPeliculas">
+    <tr *ngFor="let p of pedidos">
+      <td>{{p.codigo}}</td>
+      <td>{{p.fecha}}</td>
+      <td>{{p.total}} €</td>
+    </tr>
+  </tbody>
+</table>
+

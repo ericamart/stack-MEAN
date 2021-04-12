@@ -1,0 +1,28 @@
+<p></p>
+
+<div class="text-center col-xs-12">
+  <h4>Cesta</h4>
+</div>
+
+<p></p>
+
+<div class="row">
+    <div class="col-6">
+      <h4>{{pedido.total}} €</h4>
+    </div>
+    <div class="col-6 text-right">
+      <input type="button" class="btn btn-primary" value="Finalizar compra" routerLink="/principal/compra"/>
+    </div>
+</div>
+
+<hr/>  
+
+<div *ngFor="let d of pedido.getDetalles()">
+  <app-detalle [detalle]="d" ></app-detalle>
+</div>
+
+<div *ngIf="pedido.getDetalles().length == 0" class="text-center">
+  <h4>
+    No hay productos en la cesta
+  </h4>
+</div>        

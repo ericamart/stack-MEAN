@@ -1,0 +1,59 @@
+<p></p>
+
+<div class="text-center col-xs-12">
+    <h2>Alta de usuario</h2>
+</div>
+
+<div class="row">
+    <div class="col-xs-0 col-sm-2"></div>
+    <div class="col-xs-12 col-sm-8">
+            
+      <div class="form-horizontal" id="formulario">
+          <div class="form-group">
+              <label class="control-label col-xs-2" for="nombre">Nombre</label>
+              <div class="col-xs-8">
+                  <input type="text" id="nombre" class="form-control" [(ngModel)]="usuario.nombre" required="required"/>
+              </div>
+          </div>
+          <div class="form-group">
+              <label class="control-label col-xs-2" for="login">Login</label>
+              {{errorLogin}}
+              <div class="col-xs-8">
+                <input type="text" [ngClass]="'form-control '+estiloLogin" class="form-control" id="login" [(ngModel)]="usuario.login" (blur)="comprobarLogin()"/>
+            </div>
+          </div>
+          <div class="form-group">
+              <label class="control-label col-xs-2" for="password">Password</label>
+              <div class="col-xs-8">
+                  <input type="text" class="form-control" id="password" [(ngModel)]="usuario.pw"/>
+              </div>
+          </div>
+          <div class="form-group">
+              <label class="control-label col-xs-2" for="cp">Confirmar password</label>
+              <div class="col-xs-8">
+                  <input type="text" class="form-control" id="cp" [(ngModel)]="confirmacionPW"/>
+              </div>
+          </div>                              
+          <div class="form-group">
+              <label class="control-label col-xs-2" for="idioma">Idioma</label>
+              <div class="col-xs-8">
+                  <select class="form-control" id="idioma" [(ngModel)]="usuario.idioma">
+                    <option>ES</option>
+                    <option>EN</option>
+                  </select>
+              </div>
+          </div>                              
+      </div>
+
+      <div *ngIf="mensaje" class="alert alert-danger">{{mensaje}}</div>
+
+      <div>
+          <input type="button" value="Siguiente" class="btn btn-primary"(click)="siguiente()"/>
+          <input type="button" value="Cancelar" class="btn btn-warning" [routerLink]="['/login']"/>
+      </div>      
+  
+    </div>
+    <div class="col-xs-0 col-sm-2"></div>
+  </div>  
+  
+  

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+            crossorigin="anonymous"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.dev.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
+                           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
+                           crossorigin="anonymous">
+    
+    <title>Document</title>
+</head>
+
+<script type="text/javascript">
+
+let socket;
+let identificadores = [];
+
+function conectar() {
+    let identificador = $("#txtIdentificador").val();
+    if (identificador.trim() == '') {
+        alert('No te puedes conectar sin identificador');
+        return;
+    }
+    
+    console.log("Conectando...");
+
+    // Al incluir la librería de socket.io tenemos implíitio el objeto 'io'
+    // (cuando se incluye una librería en la cabecera, todo javascript que esté
+    // fuera de una función se ejecuta automáticamente)
+
+    // al hacer connect tenemos ya que socket es distinto de undefined
+    // pero todavía no se ha establecido la conexión (asíncrono)
+    socket = io.connect('http://localhost:9000', { reconnection:false });
+
+    // Evento 'onConnect'
+    socket.on('connect', function() {
+        // emitiremos un mensaje
+        socket.emit('identificador', identificador);
+        socket.on('mensaje', mostrarMensaje);
+        socket.on('aviso', mostrarMensaje);
+        socket.on('identificadores', addIdentificadores);
+    });
+
+}
+
+function desconectar() {
+    socket.disconnect();
+}
+
+function enviar() {
+    let mensaje = $("#txtMensaje").val();
+    if (mensaje.trim() == '') {
+        alert("¡No se puede enviar algo vacío!");
+        return;
+    }
+
+    socket.emit('mensaje', mensaje);
+    $("#txtMensaje").val('');
+}
+
+function mostrarMensaje(mensajeJSON) {
+    let mensaje = JSON.parse(mensajeJSON);
+    $('#mensajes').append(mensaje.identificador + ": " + mensaje.mensaje + '<br/>');
+}
+
+function addIdentificadores(identificadoresJSON) {
+    identificadores = JSON.parse(identificadoresJSON);
+    
+}
+
+$(inicializar);
+function inicializar() {
+    $("#btnConectar").click(conectar);
+    $("#btnDesconectar").click(desconectar);
+    $("#btnEnviar").click(enviar);
+    //$("#btnDesconectar").attr("disabled","disabled");
+}
+
+</script>
+
+<body>
+    
+    <h1>Socket.IO</h1>
+
+    ID 
+    <input type="text" id="txtIdentificador" />
+    <input type="button" id="btnConectar" value="Conectar" />
+    <input type="button" id="btnDesconectar" value="Desconectar" />
+
+    <hr/>
+
+    <div class="row">
+        <div class="col-0 col-md-1"></div>
+        <div class="col-12 col-md-10">
+            
+            <div class="row">
+                <div class="col-7">
+                    
+                    Mensaje
+                    <input type="text" id="txtMensaje"/>
+                    <input type="button" id="btnEnviar" value="Enviar"/>
+                    <p></p>
+                    <div id="mensajes" class="card"></div>
+
+                </div>
+                <div class="col-5">
+
+                    Usuarios conectados:
+                    <p></p>
+                    <div id="identificadores" class="card"/>
+
+                </div>
+            </div>
+
+        </div>
+        <div class="col-0 col-md-1"></div>
+    </div>
+</body>
+</html>

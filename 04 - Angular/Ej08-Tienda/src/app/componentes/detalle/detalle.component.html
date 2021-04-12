@@ -1,0 +1,36 @@
+
+<div class="card">
+    
+    <div class="row">
+        <div class="col-2">
+            <img src="zzz"/>
+        </div>
+        <div class="col-10">
+            <div class="row">
+                <div class="col-6">
+                    <h4>{{detalle.producto.nombre}}</h4>
+                </div>
+                <div class="col-6 text-right">
+                    <h4>{{detalle.producto.categoria}}</h4>
+                </div>
+            </div>
+            <div class="text-justify">
+                {{ detalle.producto.descripcion | slice:0:300 }}
+            </div>
+        </div>
+    </div>
+
+    <hr/>
+
+    <div class="row">
+        <div class="col-6">
+            precio: <b>{{detalle.producto.precio}}</b>
+        </div>
+        <div class="col-6 text-right">
+            Cantidad {{detalle.cantidad}}
+            <input type="button" class="btn btn-success" value="Comprar" (click)="comprar()"/> 
+            <input type="button" class="btn btn-warning" value="Descomprar" (click)="descomprar()"/> 
+        </div>
+    </div>
+    
+</div>

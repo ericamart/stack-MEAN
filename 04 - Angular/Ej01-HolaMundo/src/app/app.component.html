@@ -1,0 +1,27 @@
+<h2>
+  <font color="green">
+    
+  </font>
+</h2>
+
+<hr/>
+
+{{ 50 + 50 }}
+
+<br/>
+
+Titulo: {{ libro.titulo }}<br/>
+Autor: {{ libro.autor }}<br/>
+ISBN: {{ libro.ISBN }}<br/>
+
+<hr/>
+
+Título: <input type="text" id="titulo" [(ngModel)]="libro.titulo"/>
+
+<hr/>
+
+<input type="button" value="Dale" (click)="botonPulsado()"/>
+
+<hr/>
+
+{{funcionQueNoEsVoid('BONANZA')}}

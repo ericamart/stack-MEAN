@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<script type="text/javascript">
+
+    function saludar() {
+        alert("Holaaaaaa");
+    }
+
+    // -----------------------------------------------------
+    function temporizador1() {
+        setTimeout(saludar, 5000);
+    }
+
+    // -----------------------------------------------------
+    let timerId = null;
+    function temporizador2() {
+        timerId = setTimeout(saludar, 2000);
+    }
+
+    function cancelarTemporizador() {
+        clearTimeout(timerId);
+    }
+
+    // -----------------------------------------------------
+    function temporizador3() {
+        let dato = document.getElementById("dato").value;
+        // esto no puede ser!!!! no podemos invocar la función
+        //setTimeout(handlerTemporizador3(dato), 5000);
+        setTimeout( function() { 
+            handlerTemporizador3(dato); 
+        }, 5000);
+    }
+
+    function handlerTemporizador3(dato) {
+        alert(dato);
+    }
+    // -----------------------------------------------------
+
+    window.onload = function() {
+        document.getElementById("btnTemporizador1").onclick = temporizador1;
+        document.getElementById("btnTemporizador2").onclick = temporizador2;
+        document.getElementById("btnCancelar").onclick = cancelarTemporizador;
+        document.getElementById("btnTemporizador3").onclick = temporizador3;
+    }
+
+</script>
+
+<body>
+
+    <h1>Temporizadores</h1>
+
+    <input type="button" id="btnTemporizador1" value="Temporizador 1"/>
+
+    <hr/>
+
+    <input type="button" id="btnTemporizador2" value="Temporizador 2"/>
+    <input type="button" id="btnCancelar" value="Cancelar"/>
+
+    <hr/>
+
+    Dato:
+    <input type="text" id="dato"/>
+    <input type="button" id="btnTemporizador3" value="Temporizador 3"/>
+
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script type="text/javascript" src="jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
+                           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
+                           crossorigin="anonymous">
+</head>
+
+<script type="text/javascript">
+ 
+let url = ""; // "localhost:4000"; --> no se pone porque no hace falta, se pide el contenido desde
+              // el mismo origen (repasar rutas absolutas, rutas relativas y cross origin)
+
+function nuevo() {
+    window.location = "formularioPeliculas.html";
+}
+
+function getPeliculas() {
+    /* deprecated
+    $.ajax( { url     : url+"/peliculas",
+              success : rellenarTablaPeliculas,
+              error   : procesarError } );
+    */
+
+    /*
+    obj = $.ajax( { url : '/peliculas' });
+    obj.done(rellenarTablaPeliculas);
+    obj.fail(procesarError);
+    //obj.allways(algo);
+    */
+
+    $.ajax( { url : '/peliculas' })
+    .done(rellenarTablaPeliculas)
+    .fail(procesarError);
+}
+
+function rellenarTablaPeliculas(peliculas) {
+    // no nos devuelve un JSON porque JQuery ha mirado qué es en la cabecera 
+    // y ya lo ha transformado en un array de objetos
+
+    console.log(peliculas);
+    $("#tablaPeliculas").html("");
+
+    for (let i=0; i<peliculas.length; i++) {
+        let pelicula = peliculas[i];
+        $("<tr onclick='seleccionarPelicula(" + pelicula.id + ")'>" + 
+                "<td>" + pelicula.titulo + "</td>" +
+                "<td>" + pelicula.director + "</td>" +
+                "<td>" + pelicula.genero + "</td>" +
+                "<td>" + pelicula.year + "</td>" +
+          "</tr>").appendTo($("#tablaPeliculas"));
+    }
+}
+
+function seleccionarPelicula(id) {
+    sessionStorage.setItem("idPeliculaSel", id);
+    window.location = "formularioPeliculas.html";
+}
+
+function procesarError(error) {
+    // error es un objeto
+    console.log(error);
+}
+
+$(inicializar);  // se ejecuta cuando la página se cargue
+
+function inicializar() {
+    getPeliculas();
+    $('#btn_nuevo').click(nuevo);
+    $('#btn_actulaizar').click(getPeliculas);
+    
+    let cookies = document.cookie;
+    console.log("Cookies: " + cookies);
+
+    // buscamos la cockie o al session storage, ver si hay
+    // algo y lo ponemos en un div
+    let mensaje = sessionStorage.getItem("mensaje");
+    if (mensaje != null) {
+        sessionStorage.removeItem("mensaje");
+        $("#mensaje").html("<div class='alert alert-success alert-dismissible'>" + 
+                            "<button type='button' class='close' data-dismiss='alert'>&times;</button>" + mensaje +
+                         "</div>");
+    } else {
+        $("#mensaje").html("");
+        
+    }   
+}
+
+</script>
+
+<body>
+    <div class="text-center page-header">
+        <h1>Películas 3000</h1>
+    </div>
+
+    <h2 class="text-center">Listado de películas</h2>
+
+    <br/>
+
+    <div class="row">
+        <div id="mensaje" class="col-xs-12 col-sm-8 offset-sm-2"></div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-0 col-sm-2"></div>
+        <div class="col-xs-12 col-sm-8">
+            <div class="text-center">
+                <button type="button" id="btn_nuevo"      class="btn btn-primary">Nuevo</button>
+                <button type="button" id="btn_actualizar" class="btn btn-primary">Actualizar</button>
+            </div>
+    
+            <br/>
+    
+            <table class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>Título</th>
+                        <th>Director</th>
+                        <th>Género</th>
+                        <th>Año</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaPeliculas"></tbody>
+            </table>
+
+        </div>
+        <div class="col-xs-0 col-sm-2"></div>
+    </div>
+    
+</body>
+</html>

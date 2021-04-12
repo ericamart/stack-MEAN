@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<script type="text/javascript">
+
+    // 'this' dentro de una función es una referencia al objeto que
+    // posee la función
+    let libro = {'titulo' : 'el quijote', 
+                 'saludar' : function () {
+                     // Aqui 'this' es el libro
+                     console.log("Hola, soy " + this.titulo);
+                 } };
+    console.log(libro.titulo);
+    libro.saludar();
+
+    function XXX() {
+        // Aquí 'this' es window
+        console.log(this);
+    }
+
+    //
+    // Funciones prototipo: 
+    // nos devuelve un objeto aunque no tienen return
+    //
+
+    function Cliente() {
+        // 'this' cuando la función se invoca con el 'new' es el objeto que 
+        // se va a devolver
+        this.nombre    = "";
+        this.direccion = "";
+        this.telefono  = "";
+    }
+
+    console.log(Cliente()); // devuelve undefined
+    console.log(new Cliente()); // devuelve un objeto
+
+    cliente1 = new Cliente(); // si invocamos la función con 'new' nos devulve 
+                              // un objeto aunque no tenga return
+    console.log(cliente1.nombre);
+
+    // cada vez que invocamos la función con 'new' obtjeenmos un objeto distinto
+    cliente2 = new Cliente();
+    cliente2.nombre = "Bender";
+    cliente3 = new Cliente();
+    cliente3.nombre = "Fry";
+    console.log(cliente2);
+    console.log(cliente3);
+
+    // 
+    // Añadiendo funciones a los objetos (en realidad se añaden propiedades cuyo 
+    // valor es una función)
+    // 
+    console.log("======================================");
+    function Coche() {
+        this.marca = '';
+        this.modelo = '';
+        this.matricula = '';
+
+        // Si declaramos aqui las funciones, cada instancia tiene una copia de 
+        // la función, y eso es un sin Dios
+        this.toString = function() {
+            return this.marca + ', ' + this.modelo + ', ' + this.matricula;
+        }
+    }
+    let coche1 = new Coche();
+    coche1.marca = 'Renault';
+    coche1.modelo = '8';
+    coche1.matricula = 'M-5543-YC';
+    let coche2 = new Coche();
+    coche2.marca = 'Seat';
+    coche2.modelo = 'Ibiza';
+    coche2.matricula = '6678-BCD';
+    console.log(coche1.toString());
+    console.log(coche2.toString());
+
+    // 
+    // Añadiendo funciones al objeto usando el PROTOTIPO
+    //
+    console.log("======================================");
+    function Disco() {
+        this.titulo = null;
+        this.grupo = null;
+        this.year = null;
+    }
+    let disco1 = new Disco();
+    console.log(disco1);
+
+    disco1.duracion = 45; // solo disco1 tiene la propiedad duración
+                          // si creo otro disco no la tendrá
+
+    // las funciones añadidas al prototipo serán compartidas por todas
+    // las instancias
+    Disco.prototype.toString = function () {  // como todos los discos comparten el prototipo, 
+                                              // todos tendrán la función
+        return this.titulo + ', ' + this.grupo + ', ' + this.year; 
+    }
+    disco1.titulo = "Tommy";
+    disco1.grupo = "The Who";
+    disco1.year = 1969
+    console.log(disco1.toString());
+
+    //
+    // Simulando un constructor
+    //
+    console.log("======================================");
+    function Restaurante(nombre, direccion) {
+        this.nombre = nombre;
+        this.direccion = direccion;
+    }
+    Restaurante.prototype.toString = function () { 
+        return this.nombre + ', ' + this.direccion; 
+    }
+    let rest1 = new Restaurante("Restaurante Tal", "C/Pascual");
+    let rest2 = new Restaurante("Casa Manolo", "C/XXXX");
+    console.log(rest1.toString());
+    console.log(rest2.toString());
+
+    //
+    // Funciones 'privadas' (esto es raro, no se utiliza)
+    //
+    console.log("======================================");
+    function Ciudad(nombre, poblacion) {
+        this.nombre = nombre;
+        this.poblacion = poblacion;
+
+        // Esto sería una función publica
+        this.f1 = function() {
+            console.log("Función pública");
+        }
+        // y esto una función privada (pero es una ested function / clojure)
+        function f2() {
+            console.log("Función privada");
+        }
+    }
+    let ciudad1 = new Ciudad("Getafe", 150000);
+    ciudad1.f1();
+    //ciudad1.f2(); // da error, 'ciudad1.f2 is not a function'
+
+    //
+    // 'atributos' 'privados' (esto es raro, no se utiliza)
+    //
+    console.log("======================================");
+    function Pelicula(tit, dir) {
+        // Si declaramos así los atributos son accesibles desde fuera
+        //this.titulo   = tit;
+        //this.director = dir;
+
+        // Si no añadimos con this el atributo decimos que es 'privado'
+        let titulo   = tit;
+        let director = dir;
+    }
+    pelicula1 = new Pelicula("AA", 'BB');
+    console.log(pelicula1.titulo);  // undefined
+
+    // 
+    // Propiedades 'estáticas' (esto lo utiliza jquery)
+    //
+    console.log("======================================");
+    // queremos saber cuantos ordenadores se han creado
+    function Ordenador(marca, modelo)  {
+        this.marca = marca;
+        this.modelo = modelo;
+
+//       Ordenador.contador = 0; // cada vez que se cree un ordenador se reinicia el valor
+//       Ordeandor.contador++;
+        
+        if (typeof Ordenador.contador == 'undefined') {
+            Ordenador.contador = 0;
+        }
+        Ordenador.contador++;
+
+    }
+    let ordenador1 = new Ordenador('Amstrad', 'CPC_464');
+    let ordeandor2 = new Ordenador('Sinclair', 'ZX-Specturm');
+    console.log(Ordenador.contador);
+
+</script>
+
+<body>
+
+    <h1>JS Objetos</h1>
+
+</body>
+</html>

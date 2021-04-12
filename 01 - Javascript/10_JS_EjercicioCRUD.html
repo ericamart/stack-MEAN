@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<script type="text/javascript">
+
+
+function Videojuego(titulo, fabricante, year, tipo) {
+    if (typeof Videojuego.contador == 'undefined') {
+            Videojuego.contador = 1; // empieza por uno porque si empieza por cero
+                                     // el botón de borrar elimina el primero a pesar de
+                                     // que no hay ningún elemento seleccionado
+    }
+
+    this.id = Videojuego.contador++;
+    this.titulo     = titulo;
+    this.fabricante = fabricante;
+    this.year       = year;
+    this.tipo       = tipo;
+}
+
+let videojuegos = [];
+
+function insertar() {
+    let titulo = document.getElementById("titulo").value;
+    let fabricante = document.getElementById("fabricante").value;
+    let year = document.getElementById("year").value;
+    let tipo = document.getElementById("tipo").value;
+
+    if (titulo.trim() != '') {
+        let videojuego = new Videojuego(titulo, fabricante, year, tipo);
+        videojuegos.push(videojuego);
+        pintarTabla();
+        vaciarFormulario();
+    }
+}
+
+function modificar() {
+    let id = document.getElementById("idVideojuego").value;
+    if (id != null && id != undefined) {
+        // buscamos el videojuego en el array
+        for (let i=0; i<videojuegos.length; i++) {
+            if (videojuegos[i].id == id) {
+                videojuegos[i].titulo = document.getElementById("titulo").value;
+                videojuegos[i].fabricante = document.getElementById("fabricante").value;
+                videojuegos[i].year = document.getElementById("year").value;
+                videojuegos[i].tipo = document.getElementById("tipo").value;
+                break;
+            }
+        }
+    }
+    pintarTabla();
+    vaciarFormulario();
+}
+
+function borrar() {
+    let id = document.getElementById("idVideojuego").value;
+    if (id != null && id != undefined) {
+        // buscamos el videojuego en el array y lo borramos
+        for (let i=0; i<videojuegos.length; i++) {
+            if (videojuegos[i].id == id) {
+                videojuegos.splice(i,1);
+                break;
+            }
+        }
+    }
+    pintarTabla();
+    vaciarFormulario();    
+}
+
+function seleccionar(id) {
+    modoSeleccion();
+    // buscamos el videojuego en el array
+    for (let i=0; i<videojuegos.length; i++) {
+        if (videojuegos[i].id == id) {
+            document.getElementById("idVideojuego").value = videojuegos[i].id;
+            document.getElementById("titulo").value = videojuegos[i].titulo;
+            document.getElementById("fabricante").value = videojuegos[i].fabricante;
+            document.getElementById("year").value = videojuegos[i].year;
+            document.getElementById("tipo").value = videojuegos[i].tipo;
+            break;
+        }
+    }
+}
+
+function pintarTabla() {
+    let filas = "";
+    for (let i=0; i<videojuegos.length; i++) {
+        let videojuego = videojuegos[i];
+        filas += "<tr onclick='seleccionar(" + videojuego.id + ")'>"+
+                    "<td>" + videojuego.titulo + "</td>" +
+                    "<td>" + videojuego.fabricante + "</td>" +
+                    "<td>" + videojuego.year + "</td>" +
+                    "<td>" + videojuego.tipo + "</td>" +
+                "</tr>";
+    }
+    document.getElementById("tablavideojuegos").innerHTML = filas;
+}
+
+function vaciarFormulario() {
+    document.getElementById("idVideojuego").value = "";
+    document.getElementById("titulo").value = "";
+    document.getElementById("fabricante").value = "";
+    document.getElementById("year").value = "";
+    document.getElementById("tipo").value = "";   
+    modoInsercion(); 
+}
+
+function modoInsercion() {
+    document.getElementById("btnInsertar").disabled  = '';
+    document.getElementById("btnModificar").disabled = 'disabled';
+    document.getElementById("btnBorrar").disabled    = 'disabled';
+}
+
+function modoSeleccion() {
+    document.getElementById("btnInsertar").disabled  = 'disabled';
+    document.getElementById("btnModificar").disabled = '';
+    document.getElementById("btnBorrar").disabled    = '';
+}
+
+window.onload = function() {
+    document.getElementById("btnInsertar").onclick  = insertar;
+    document.getElementById("btnModificar").onclick = modificar;
+    document.getElementById("btnBorrar").onclick    = borrar;
+    document.getElementById("btnVaciar").onclick    = vaciarFormulario;
+    modoInsercion();
+}
+
+</script>
+
+<body>
+    <h1 align="center">
+        <font color="ligthGreen">
+            Videojuegos
+        </font>
+    </h1>
+    <div align="center">
+        <input type="button" id="btnInsertar"  value="Insertar"/>
+        <input type="button" id="btnModificar" value="Modificar"/>
+        <input type="button" id="btnBorrar"    value="Borrar"/>
+        <input type="button" id="btnVaciar"    value="Vaciar"/>
+    </div>
+    <br/><br/><br/><br/>
+    <div align="center">
+        <form id="formulario">
+            <input type="hidden" id="idVideojuego" />
+            Titulo:     <input type="text" id="titulo"/>
+            Fabricante: <input type="text" id="fabricante"/>
+            Año:        <input type="text" id="year"/>
+            Tipo:       <input type="text" id="tipo"/>
+        </form>
+    </div>
+    <br/><br/><br/><br/>
+    <div id="divTabla">
+        <table align="center" border="1">
+            <tr>
+                <th>Titulo</th>
+                <th>Fabricante</th>
+                <th>Año</th>
+                <th>Tipo</th>
+            </tr>
+            <tbody id="tablavideojuegos"></tbody>
+        </table>
+    </div>
+</body>
+</html>

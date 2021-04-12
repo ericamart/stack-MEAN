@@ -1,0 +1,32 @@
+
+<p></p>
+
+<div class="text-center col-xs-12">
+  <h4>Catálogo</h4>
+</div>
+
+<p></p>
+
+<div class="row">
+    <div class="col-2">
+        <label class="text-left">Categoría</label> 
+    </div>
+    <div class="col-8">
+      <input type="text" class="form-control" [(ngModel)]="categoria">
+    </div>
+    <div class="col-2 text-right">
+      <input type="button" class="btn btn-primary" value="Buscar" (click)="buscarProductos()"/>
+    </div>
+</div>
+
+<hr/>     
+
+<div *ngFor="let p of productos">
+  <app-producto [producto]="p" ></app-producto>
+</div>
+
+<div *ngIf="productos.length == 0" class="text-center">
+  <h4>
+    No hay resultados en la búsqueda
+  </h4>
+</div>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<script type="text/javascript">
+    /*
+    function XMLHttpRequest() {
+        this.responseText = null;
+        this.status       = null;
+        this,responseXML  = null;
+        this.readyState   = 0;
+    }
+    XMLHttpRequest.open = new function(metodo, url, asincrono) { };
+    XMLHttpRequest.send = new function(body) {  };
+    XMLHttpRequest.onreadystatechange = null;  
+    XMLHttpRequest.onload = null;
+    XMLHttpRequest.onerror = null;
+    */
+
+    function peticionSincrona() {
+        let xmlHttp = new XMLHttpRequest();
+
+        let parametros = "nombre=" + document.getElementById("nombre").value;
+
+        // xmlHttp.open(METHOD, URL, SINCRONO/ASINCRONO)
+        // false: sincrono
+        // true : asincrono
+        xmlHttp.open("get", "http://localhost:8080/Ej01_EjemploAjax/buscar?"+parametros, false);
+        xmlHttp.send(); // esto es el body de la petición
+        
+        // petición síncrona --> no pasa a la siguiente línea hasta que llegue la respuesta
+
+        let respuesta = xmlHttp.responseText; // el body tal cual
+        let estado    = xmlHttp.status;       // código de la respuesta (200, 404, ...)
+        let xml       = xmlHttp.responseXML;  // si la respuesta es un xml, aquí tenemos el árbol de elementos
+
+        procesarRespuesta(xmlHttp.responseText);
+    }
+
+    function peticionAsincrona() {
+        let xmlHttp = new XMLHttpRequest();
+
+        // función de retrollamada o calva. La programamos nosotros pero no la invocamos nosotros
+        // se llama a esta función cada vez que cambia de estado
+        /*xmlHttp.onreadystatechange = function() {  
+            // readyState --> guarda un número
+            // 0-creado
+            // 1-open
+            // 2-enviado
+            // 3-comienza a recibirse la respuesta
+            // 4-response complete
+            console.log("readyState: " + this.readyState); // this = xmlHttp
+            if (this.readyState == 4) {
+                if (this.status == 200) {
+                    procesarRespuesta(this.responseText);
+                } else {
+                    // aquí llamaríamos a una función que procese el error
+                    alert("Error");
+                }
+            }
+        };*/
+
+        // En lugar de onreadystatechange también podemos utilizar 'onload' y 'onerror'
+        xmlHttp.onload = function() {
+            console.log("Respuesta: " + this.responseText);
+        }
+        xmlHttp.onerror = function() {
+            console.log("Error");
+        }
+
+        let parametros = "nombre=" + document.getElementById("nombre").value;
+        xmlHttp.open("get", "http://localhost:8080/Ej01_EjemploAjax/buscar?"+parametros, true);
+
+        xmlHttp.send();
+    }
+
+    function procesarRespuesta(datos) {
+        document.getElementById("resultado").innerHTML = "<h2>" + datos + "</h2>";
+    }
+
+</script>
+
+<body>
+    
+    <h1>Ajax</h1>
+    <br/>
+    
+    Nombre: <input type="text" id="nombre"/>
+
+    <input type="button" id="" value="Petición síncrona"  onclick="peticionSincrona()"/>
+    <input type="button" id="" value="Petición asíncrona" onclick="peticionAsincrona()"/>
+
+    <div id="resultado"></div>
+
+</body>
+</html>
